@@ -23,11 +23,18 @@ async function run() {
     
     const database = client.db("Vehica");
     const carCollection = database.collection("Cars");
+    const reviewCollection = database.collection("Reviews");
     // Get All Cars to display on UI
     app.get('/explorecars', async(req,res)=>{
       const result = await carCollection.find({}).toArray();
       res.json(result)
-    })
+    });
+
+    // Get All Reviews to display on UI
+    app.get('/review', async(req,res)=>{
+      const result = await reviewCollection.find({}).toArray();
+      res.json(result)
+    });
   } finally {
     // await client.close();
   }
