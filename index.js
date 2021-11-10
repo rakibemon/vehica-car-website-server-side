@@ -24,6 +24,7 @@ async function run() {
     const database = client.db("Vehica");
     const carCollection = database.collection("Cars");
     const reviewCollection = database.collection("Reviews");
+    const qualityCollection = database.collection("Quality");
     // Get All Cars to display on UI
     app.get('/explorecars', async(req,res)=>{
       const result = await carCollection.find({}).toArray();
@@ -33,6 +34,13 @@ async function run() {
     // Get All Reviews to display on UI
     app.get('/review', async(req,res)=>{
       const result = await reviewCollection.find({}).toArray();
+      res.json(result)
+    });
+
+
+    // Get All Qualities to display on UI
+    app.get('/quality', async(req,res)=>{
+      const result = await qualityCollection.find({}).toArray();
       res.json(result)
     });
   } finally {
