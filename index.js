@@ -25,6 +25,7 @@ async function run() {
     const carCollection = database.collection("Cars");
     const reviewCollection = database.collection("Reviews");
     const qualityCollection = database.collection("Quality");
+    const purchasingCollection = database.collection("purchasing_Info");
     // Get All Cars to display on UI
     app.get('/explorecars', async(req,res)=>{
       const result = await carCollection.find({}).toArray();
@@ -42,6 +43,23 @@ async function run() {
     app.get('/quality', async(req,res)=>{
       const result = await qualityCollection.find({}).toArray();
       res.json(result)
+    });
+
+
+    // Get Single Car Info to display on UI
+    app.get('/car/:carId', async(req,res)=>{
+      const id = req.params.carId;
+      const query = {_id: ObjectId(id)}
+      const result = await carCollection.findOne(query);
+      res.json(result)
+    });
+
+
+    // Get Single Car Info to display on UI
+    app.post('/purchasingInfo', async(req,res)=>{
+      const data = req.body;
+      const result = await purchasingCollection.insertOne(data);
+      res.json(result.acknowledged)
     });
   } finally {
     // await client.close();
