@@ -26,6 +26,7 @@ async function run() {
     const reviewCollection = database.collection("Reviews");
     const qualityCollection = database.collection("Quality");
     const purchasingCollection = database.collection("purchasing_Info");
+    const userCollection = database.collection("users");
     // Get All Cars to display on UI
     app.get('/explorecars', async(req,res)=>{
       const result = await carCollection.find({}).toArray();
@@ -65,10 +66,25 @@ async function run() {
     });
 
 
+    // Get My Order Info to display on UI
+    app.get('/allOrder', async(req,res)=>{
+      const result = await purchasingCollection.find({}).toArray();
+      res.json(result)
+    });
+
+
     // Get Single Car Info to display on UI
     app.post('/purchasingInfo', async(req,res)=>{
       const data = req.body;
       const result = await purchasingCollection.insertOne(data);
+      res.json(result.acknowledged)
+    });
+
+    // Store Logged in User Data
+    app.post('/users', async (req, res) => {
+      const user = req.body;
+      const result = await userCollection.insertOne(user);
+      console.log(result)
       res.json(result.acknowledged)
     });
 
@@ -79,6 +95,49 @@ async function run() {
       const result = await purchasingCollection.deleteOne(query);
       res.json(result.acknowledged)
     });
+
+    app.put('/status/:id', async (req, res) => {
+      const id = req.params.id;
+      const updatedInfo = req.body;
+      const result = await purchasingCollection.updateOne({_id:ObjectId(id)},{
+        $set:{
+          status : updatedInfo.status
+        },
+      });
+      console.log(result)
+      res.json(result.acknowledged);
+    });
+
+    // Google user can logged in before so we use upsert method here
+    app.put('/users', async (req, res) => {
+      const user = req.body;
+      const query = { email: user.email };
+      const options = { upsert: true }
+      const updateUser = { $set: user };
+      const result = await userCollection.updateOne(query, updateUser, options)
+      res.send(result.acknowledged)
+    });
+
+    // Make admin
+    app.put('/user/admin', async (req, res) => {
+      const user = req.body.email;
+      const query = { email: user };
+      const updateUser = { $set: {role:'Admin'}};
+      const result = await userCollection.updateOne(query, updateUser);
+      res.json(result)
+    });
+
+    // check admin or not
+    app.get('/user/:email', async (req, res) => {
+      const email = req.params.email;
+      const query = { email: email }
+      const user = await userCollection.findOne(query);
+      let isAdmin = false
+      if (user?.role === 'Admin') {
+        isAdmin = true
+      };
+      res.json({ admin: isAdmin })
+    })
 
   } finally {
     // await client.close();
