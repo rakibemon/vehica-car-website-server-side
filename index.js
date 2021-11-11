@@ -55,12 +55,31 @@ async function run() {
     });
 
 
+
+    // Get My Order Info to display on UI
+    app.get('/myOrder', async(req,res)=>{
+      const email = req.query.email;
+      const query = {email}
+      const result = await purchasingCollection.find(query).toArray();
+      res.json(result)
+    });
+
+
     // Get Single Car Info to display on UI
     app.post('/purchasingInfo', async(req,res)=>{
       const data = req.body;
       const result = await purchasingCollection.insertOne(data);
       res.json(result.acknowledged)
     });
+
+     // Find Clicked Car to delete from Order
+     app.delete('/deleteOrder/:orderId', async(req,res)=>{
+      const id = req.params.orderId;
+      const query = {_id: ObjectId(id)}
+      const result = await purchasingCollection.deleteOne(query);
+      res.json(result.acknowledged)
+    });
+
   } finally {
     // await client.close();
   }
