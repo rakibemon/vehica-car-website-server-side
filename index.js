@@ -109,6 +109,14 @@ async function run() {
       res.json(result.acknowledged)
     });
 
+     // Find Clicked Car to delete from Explore cars (Admin)
+     app.delete('/manageProduct/:id', async(req,res)=>{
+      const id = req.params.id;
+      const query = {_id: ObjectId(id)}
+      const result = await carCollection.deleteOne(query);
+      res.json(result)
+    });
+
     app.put('/status/:id', async (req, res) => {
       const id = req.params.id;
       const updatedInfo = req.body;
