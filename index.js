@@ -125,7 +125,6 @@ async function run() {
           status : updatedInfo.status
         },
       });
-      console.log(result)
       res.json(result.acknowledged);
     });
 
