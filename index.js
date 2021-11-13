@@ -84,8 +84,21 @@ async function run() {
     app.post('/users', async (req, res) => {
       const user = req.body;
       const result = await userCollection.insertOne(user);
-      console.log(result)
       res.json(result.acknowledged)
+    });
+
+    // Post New Add a Products info to carCollection
+    app.post('/addProduct', async (req, res) => {
+      const carInfo = req.body;
+      const result = await carCollection.insertOne(carInfo);
+      res.json(result)
+    });
+
+    // Post New Review to reviewCollection
+    app.post('/addReview', async (req, res) => {
+      const review = req.body;
+      const result = await reviewCollection.insertOne(review);
+      res.json(result)
     });
 
      // Find Clicked Car to delete from Order
