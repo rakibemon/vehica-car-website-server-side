@@ -47,7 +47,7 @@ async function run() {
     });
 
 
-    // Get Single Car Info to display on UI
+    // Get Single Car Info by Id to display on UI
     app.get('/car/:carId', async(req,res)=>{
       const id = req.params.carId;
       const query = {_id: ObjectId(id)}
@@ -57,7 +57,7 @@ async function run() {
 
 
 
-    // Get My Order Info to display on UI
+    // Get My Order Info by email to display on UI
     app.get('/myOrder', async(req,res)=>{
       const email = req.query.email;
       const query = {email}
